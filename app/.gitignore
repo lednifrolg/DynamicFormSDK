@@ -1,0 +1,15 @@
+# Build directory
+/build
+
+# Generated files
+/generated/
+
+# Gradle files
+.gradle/
+
+# Local configuration
+/proguard-rules.pro
+
+# Test reports
+/test-results/
+/reports/
