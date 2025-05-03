@@ -12,20 +12,9 @@ internal class SubmitFormUseCase(
 
     suspend operator fun invoke(formSubmission: FormSubmission): Result<Boolean> {
         return try {
-            val formResult = repository.fetchForm(formSubmission.formId)
+            val form = formSubmission.form
 
-            if (formResult.isFailure) {
-                val exception = formResult.exceptionOrNull() ?: Exception("Unknown error fetching form")
-                val form = formResult.getOrNull()
-                if (form != null) {
-                    SDK.formCallbacks.onFormSubmitError(form, exception)
-                }
-                return Result.failure(exception)
-            }
-
-            val form = formResult.getOrThrow()
-
-            val validationResult = formSubmission.validate(form)
+            val validationResult = formSubmission.validate()
 
             if (validationResult.isFailure) {
                 val exception = validationResult.exceptionOrNull() ?: Exception("Unknown validation error")
@@ -44,11 +33,7 @@ internal class SubmitFormUseCase(
 
             return result
         } catch (e: Exception) {
-            val formResult = repository.fetchForm(formSubmission.formId)
-            if (formResult.isSuccess) {
-                val form = formResult.getOrThrow()
-                SDK.formCallbacks.onFormSubmitError(form, e)
-            }
+            SDK.formCallbacks.onFormSubmitError(formSubmission.form, e)
             Result.failure(e)
         }
     }

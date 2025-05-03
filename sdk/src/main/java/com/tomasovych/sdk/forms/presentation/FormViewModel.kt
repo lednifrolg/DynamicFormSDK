@@ -102,7 +102,7 @@ internal class FormViewModel(
             _uiState.update { currentState.copy(isSubmitting = true) }
 
             val formSubmission = FormSubmission(
-                formId = currentState.form.id,
+                form = currentState.form,
                 inputValues = currentState.inputValues
             )
 

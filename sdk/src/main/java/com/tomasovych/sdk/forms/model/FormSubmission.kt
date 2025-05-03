@@ -2,17 +2,14 @@ package com.tomasovych.sdk.forms.model
 
 /**
  * Represents the data submitted by a user for a form.
- * @property formId The ID of the form being submitted.
+ * @property form The form being submitted.
  * @property inputValues A map of input field IDs to their values.
  */
 data class FormSubmission(
-    val formId: String,
+    val form: Form,
     val inputValues: Map<String, String>
 ) {
-    fun validate(form: Form): Result<FormSubmission> {
-        if (formId != form.id) {
-            return Result.failure(ValidationException("Form ID mismatch"))
-        }
+    fun validate(): Result<FormSubmission> {
 
         val missingRequiredFields = form.inputs
             .filter { it.required }
